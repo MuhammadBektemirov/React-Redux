@@ -1,17 +1,18 @@
 import { Input } from '../ui'
 import { logo } from "../constants"
-import { useState } from 'react'
+import { useEffect, useState } from 'react'
 import { useDispatch, useSelector } from 'react-redux'
 import { signUserFailure, signUserStart, signUserSuccess } from '../slice/auth'
 import AuthService from '../service/auth'
 import { ValidationError } from './'
+import { useNavigate } from 'react-router-dom'
 
 const Login = () => {
   const [email, setEmail] = useState('')
   const [password, setPassword] = useState('')
   const dispatch = useDispatch()
-  const { isLoading } = useSelector(state => state.auth)
-
+  const { isLoading, loggedIn } = useSelector(state => state.auth)
+  const navigate = useNavigate()
 
   const submitLoginHandler = async (e) => {
     e.preventDefault(),
@@ -22,10 +23,17 @@ const Login = () => {
       console.log(response)
       console.log(user)
       dispatch(signUserSuccess(response.user))
+      navigate('/')
     } catch (error) {
       dispatch(signUserFailure(error.response.data.errors))
     }
   }
+
+  useEffect(() => {
+    if(loggedIn){
+      navigate('/')
+    }
+  }, [])
 
   return (
     <div>
