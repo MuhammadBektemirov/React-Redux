@@ -17,9 +17,6 @@ const Navbar = () => {
                             <>
                                 <p className="me-3 py-2 link-body-emphasis text-decoration-none m-0">{user.username}</p>
                                 <button className="btn btn-outline-danger">Logout</button>
-                                <Link to={'/login'} className="me-3 py-2 link-body-emphasis text-decoration-none">
-                                    Login
-                                </Link>
                             </>
                         ) : (
                             <>
