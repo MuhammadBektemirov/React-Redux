@@ -33,7 +33,7 @@ const Login = () => {
     if(loggedIn){
       navigate('/')
     }
-  }, [])
+  }, [loggedIn])
 
   return (
     <div>
