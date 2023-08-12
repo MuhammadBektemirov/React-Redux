@@ -8,6 +8,7 @@ import { useEffect } from "react"
 const Main = () => {
   const navigate = useNavigate()
   const { articles, isLoading } = useSelector(state => state.article)
+  const { loggedIn, user } = useSelector(state => state.auth)
   const dispatch = useDispatch()
 
   const getArticles = async () => {
@@ -17,6 +18,15 @@ const Main = () => {
       dispatch(getArticlesSuccess(response.articles))
     } catch (error) {
       console.log(error)
+    }
+  }
+
+  const deleteArticle = async slug => {
+    try {
+      await ArticleService.deleteArticle(slug)
+      getArticles()
+    } catch (error) {
+      console.log(error);
     }
   }
 
@@ -32,7 +42,7 @@ const Main = () => {
         <div>
           <div className="row row-cols-1 row-cols-sm-2 row-cols-md-3 g-3">
             {articles.map(item => (
-              <div className="col" key={item.id}>
+              <div className="col" key={item.slug}>
                 <div className="card shadow-sm h-100">
                   <svg
                     className="bd-placeholder-img card-img-top"
@@ -52,8 +62,12 @@ const Main = () => {
                   <div className="card-footer d-flex justify-content-between align-items-center">
                     <div className="btn-group">
                       <button type="button" className="btn btn-sm btn-outline-success" onClick={() => navigate(`/article/${item.slug}`)}>View</button>
-                      <button type="button" className="btn btn-sm btn-outline-secondary">Edit</button>
-                      <button type="button" className="btn btn-sm btn-outline-danger">Delete</button>
+                      {loggedIn && user.username === item.author.username && (
+                        <>
+                          <button type="button" className="btn btn-sm btn-outline-secondary" onClick={() => navigate(`/article-edit/${item.slug}`)}>Edit</button>
+                          <button type="button" className="btn btn-sm btn-outline-danger" onClick={() => deleteArticle(item.slug)}>Delete</button>
+                        </>
+                      )}
                     </div>
                     <small className="text-body-secondary fw-bold text-capitalize">{item.author.username}</small>
                   </div>
