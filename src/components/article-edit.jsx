@@ -16,14 +16,6 @@ const ArticleEdit = () => {
     const { articleDetail, isLoading } = useSelector(state => state.article)
     const navigate = useNavigate()
 
-    const editArticle = async (slug, article) => {
-        try {
-            await ArticleService.editArticle(slug, article)
-        } catch (error) {
-            console.log(error);
-        }
-    }
-
     useEffect(() => {
         const getArticleDetail = async () => {
             dispatch(getArticleDetailStart())
@@ -41,12 +33,12 @@ const ArticleEdit = () => {
         getArticleDetail()
     }, [])
 
-    const formSubmit = (e) => {
+    const formSubmit = async (e) => {
         e.preventDefault()
         const article = {title, description, body}
         dispatch(postArticleStart())
         try {
-            editArticle(slug, article)
+            await ArticleService.editArticle(slug, article)
             dispatch(postArticleSuccess())
             navigate('/')
         } catch (error) {
